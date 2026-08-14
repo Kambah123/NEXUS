@@ -296,6 +296,12 @@ async function navigate(key, silent = false) {
   const main = $('#main');
   if (!main) return;
 
+  // PIN-protected modules: prompt for the access PIN once per session.
+  if (PIN_REQUIRED.has(key) && !pinUnlocked.has(key)) {
+    openPin(key, () => navigate(key, silent));
+    return;
+  }
+
   if (currentModule && typeof currentModule.unmount === 'function') {
     try { currentModule.unmount(); } catch { /* no-op */ }
   }
@@ -355,6 +361,75 @@ function sweep() {
   document.body.append(s);
   setTimeout(() => s.remove(), 700);
 }
+
+/* ------------------------------ PIN gate --------------------------
+   A local per-module PIN. Digits are compared in-browser against a fixed
+   value; nothing is stored or transmitted. Unlock persists for the session.
+   ------------------------------------------------------------------ */
+
+const PIN_CODE = '0066';
+const PIN_REQUIRED = new Set(['messages', 'media']);
+const PIN_LABELS = { messages: 'MESSAGES', media: 'MEDIA VAULT' };
+const pinUnlocked = new Set();
+
+let pinBuffer = '';
+let pinOnOk = null;
+let pinKey = null;
+
+function openPin(key, onOk) {
+  pinKey = key;
+  pinOnOk = onOk;
+  pinBuffer = '';
+  updatePinDots();
+  $('#pin-error').classList.remove('show');
+  $('#pin-lock').innerHTML = icons.shield;
+  $('#pin-title').textContent = `${PIN_LABELS[key] || 'ENCRYPTED'} — LOCKED`;
+  $('#pin-back').classList.add('on');
+}
+
+function closePin() {
+  $('#pin-back').classList.remove('on');
+  pinOnOk = null;
+  pinKey = null;
+  pinBuffer = '';
+}
+
+function updatePinDots() {
+  $$('#pin-dots i').forEach((d, i) => d.classList.toggle('on', i < pinBuffer.length));
+}
+
+function pinInput(k) {
+  if (k === 'del') { pinBuffer = pinBuffer.slice(0, -1); updatePinDots(); return; }
+  if (pinBuffer.length >= 4) return;
+  pinBuffer += k;
+  updatePinDots();
+  if (pinBuffer.length === 4) setTimeout(checkPin, 140);
+}
+
+function checkPin() {
+  if (pinBuffer === PIN_CODE) {
+    if (pinKey) pinUnlocked.add(pinKey);
+    const ok = pinOnOk;
+    toast(`${PIN_LABELS[pinKey] || 'Module'} decrypted (simulated)`);
+    closePin();
+    if (typeof ok === 'function') ok();
+  } else {
+    const err = $('#pin-error');
+    err.classList.add('show');
+    const box = $('#pin-back').querySelector('.pin');
+    box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake');
+    pinBuffer = '';
+    updatePinDots();
+  }
+}
+
+$('#pin-pad').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-k]');
+  if (b) pinInput(b.dataset.k);
+});
+$('#pin-close').innerHTML = icons.close;
+$('#pin-close').addEventListener('click', closePin);
+$('#pin-back').addEventListener('click', (e) => { if (e.target.id === 'pin-back') closePin(); });
 
 window.addEventListener('hashchange', () => {
   if (!$('#app').classList.contains('on')) return;
@@ -452,6 +527,15 @@ $('#cmd-back').addEventListener('click', (e) => { if (e.target.id === 'cmd-back'
 
 document.addEventListener('keydown', (e) => {
   const paletteOpen = $('#cmd-back').classList.contains('on');
+  const pinOpen = $('#pin-back').classList.contains('on');
+
+  // While the PIN pad is open it captures digits, backspace and escape.
+  if (pinOpen) {
+    if (e.key === 'Escape') { closePin(); return; }
+    if (/^[0-9]$/.test(e.key)) { e.preventDefault(); pinInput(e.key); return; }
+    if (e.key === 'Backspace') { e.preventDefault(); pinInput('del'); return; }
+    return;
+  }
 
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
     e.preventDefault();
