@@ -54,10 +54,10 @@ Any static server works (`npx serve`, `php -S`, VS Code Live Server, …).
 
 ```bash
 npm test     # smoke suite: data layer, determinism, all 10 view renders, safety audit
-npm run build # optional: bundle everything into dist/nexus.html (one self-contained file)
+npm run bundle # optional: bundle everything into dist/nexus.html (one self-contained file)
 ```
 
-`npm run build` produces a single ~170 KB HTML file with inline CSS and JS that runs from anywhere — handy for a USB stick or an offline laptop. The multi-file version is the canonical app; the bundle is a convenience.
+`npm run bundle` produces a single ~170 KB HTML file with inline CSS and JS that runs from anywhere — handy for a USB stick or an offline laptop. The multi-file version is the canonical app; the bundle is a convenience.
 
 ---
 
