@@ -1,0 +1,13 @@
+# Build output — regenerate with `npm run build`
+dist/
+
+# Dependencies (there are none, but just in case)
+node_modules/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.log
