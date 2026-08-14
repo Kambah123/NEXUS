@@ -87,7 +87,9 @@ function grantAccess() {
     if (pendingDeepLink) {
       enterApp();
     } else {
-      $('#landing').removeAttribute('data-gate');
+      // Straight into the simulation after sign-in: run the init sequence,
+      // which hands off to the intelligence dashboard. No marketing page.
+      runInit();
     }
   }, 380);
 }
