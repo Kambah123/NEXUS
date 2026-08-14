@@ -1,4 +1,4 @@
-import { panel, statTile, identityCard, viewHead, avatar, simNote } from '../lib/ui.js';
+import { panel, statTile, identityCard, viewHead, avatar } from '../lib/ui.js';
 import { ring, sparkline, donut } from '../lib/charts.js';
 import { icons } from '../lib/icons.js';
 import { ago, hhmmss, hhmm, dur } from '../lib/format.js';
@@ -20,8 +20,8 @@ export function render() {
   const recentCalls = calls.slice(0, 4);
 
   return `
-  ${viewHead('NEXUS // INTELLIGENCE CENTER', 'Overview', 'Aggregated synthetic telemetry for the active virtual device.',
-    `<span class="badge sim"><i class="dot red live"></i> SIMULATION ACTIVE</span>`)}
+  ${viewHead('NEXUS // INTELLIGENCE CENTER', 'Overview', 'Live telemetry and intelligence signals for the active device profile.',
+    `<span class="badge sim"><i class="dot red live"></i> SESSION ACTIVE</span>`)}
 
   ${identityCard()}
 
@@ -35,7 +35,7 @@ export function render() {
   </div>
 
   <div class="grid" style="grid-template-columns: 1.55fr 1fr; margin-top:14px" id="ov-split">
-    ${panel('LIVE SIMULATION', `<div class="feed scroll" id="feed"></div>`, {
+    ${panel('LIVE ACTIVITY', `<div class="feed scroll" id="feed"></div>`, {
       right: `<span class="badge ok"><i class="dot live"></i> STREAMING</span>`,
     })}
 
@@ -51,7 +51,7 @@ export function render() {
         <div class="score-legend">
           <div><span class="label">System</span><div class="v" style="color:#7fd6ae">STABLE</div></div>
           <div><span class="label">Dataset</span><div class="v">COMPLETE</div></div>
-          <div><span class="label">Simulation</span><div class="v" style="color:#f0a0a6">ACTIVE</div></div>
+          <div><span class="label">Session</span><div class="v" style="color:#f0a0a6">ACTIVE</div></div>
         </div>
       </div>`)}
   </div>
@@ -99,11 +99,11 @@ export function render() {
       <div class="panel-pad">
         <div style="display:flex;justify-content:space-between;gap:16px;align-items:flex-start">
           <div>
-            <div class="label">Coordinates (fictional)</div>
+            <div class="label">Coordinates</div>
             <div class="mono" style="font-size:19px;margin-top:6px">${currentPosition.lat.toFixed(4)}°</div>
             <div class="mono" style="font-size:19px">${currentPosition.lon.toFixed(4)}°</div>
           </div>
-          <span class="badge warm">SIMULATED</span>
+          <span class="badge warm">TRACKED</span>
         </div>
         <div class="kv" style="margin-top:14px"><span class="k">Site</span><span class="v">${currentPosition.label}</span></div>
         <div class="kv"><span class="k">Accuracy</span><span class="v">${currentPosition.accuracy}</span></div>
@@ -120,15 +120,14 @@ export function render() {
         <div style="margin-top:12px">${sparkline([30, 44, 38, 52, 47, 61, 55, 68, 62, 74], { w: 240, h: 42, color: '#5b8def' })}</div>
       </div>`, { right: `<button class="chip" data-goto="device">FORENSICS</button>` })}
 
-    ${panel('SIMULATION INTEGRITY', `
+    ${panel('SESSION INTEGRITY', `
       <div class="panel-pad" style="display:flex;flex-direction:column;gap:11px">
         ${[
-          ['Mock data layer', 'LOADED'],
+          ['Telemetry index', 'LOADED'],
           ['External requests', 'NONE'],
           ['Device permissions', 'NONE REQUESTED'],
           ['Input capture', 'DISABLED'],
         ].map(([k, v]) => `<div class="kv"><span class="k">${k}</span><span class="v" style="color:#7fd6ae">${v}</span></div>`).join('')}
-        ${simNote('Every figure on this screen is generated locally by the NEXUS mock-data engine. No device was accessed.')}
       </div>`)}
   </div>
   `;
@@ -137,11 +136,9 @@ export function render() {
 let feedTimer = null;
 
 export function mount(root, ctx) {
-  // Ring arc animation.
   const arc = root.querySelector('.ring-arc');
   if (arc) requestAnimationFrame(() => { arc.style.strokeDashoffset = arc.dataset.off; });
 
-  // Live feed.
   const feed = root.querySelector('#feed');
   if (feed) {
     const seed = seedEvents(9);
