@@ -85,10 +85,9 @@ function grantAccess() {
   setTimeout(() => {
     login.style.display = 'none';
     if (pendingDeepLink) {
-      $('#landing').style.display = 'none';
       enterApp();
     } else {
-      $('#landing').style.display = '';
+      $('#landing').removeAttribute('data-gate');
     }
   }, 380);
 }
@@ -149,6 +148,7 @@ async function runInit(fast = false) {
   lines.innerHTML = '';
   fill.style.width = '0%';
   pct.textContent = '0%';
+  box.removeAttribute('data-gate');
   box.classList.add('on');
   box.setAttribute('aria-hidden', 'false');
 
@@ -277,6 +277,7 @@ function buildShell() {
 
 function enterApp() {
   if (!shellBuilt) buildShell();
+  $('#app').removeAttribute('data-gate');
   $('#app').classList.add('on');
   $('#app').setAttribute('aria-hidden', 'false');
   const start = (location.hash || '#/overview').replace('#/', '') || 'overview';
@@ -492,9 +493,10 @@ async function reveal() {
 
   app.classList.remove('on', 'dissolve');
   app.setAttribute('aria-hidden', 'true');
-  $('#landing').style.display = 'none';
+  $('#landing').setAttribute('data-gate', '');
 
   const r = $('#reveal');
+  r.removeAttribute('data-gate');
   r.classList.add('on');
 
   // Re-trigger the staggered entrance each time.
@@ -532,6 +534,7 @@ function goHome() {
   $('#reveal').classList.remove('on');
   $('#init').classList.remove('on');
   revealed = false;
+  $('#landing').removeAttribute('data-gate');
   $('#landing').style.display = '';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
