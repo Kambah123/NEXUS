@@ -1,0 +1,14 @@
+{
+  "name": "nexus-simulation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NEXUS — a fictional device-intelligence dashboard. A prank simulator with zero surveillance capability; all data is synthetic and generated locally.",
+  "type": "module",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "test": "node test/smoke.mjs",
+    "build": "node build.js"
+  },
+  "keywords": ["simulation", "prank", "dashboard", "synthetic-data", "no-dependencies"],
+  "license": "MIT"
+}
