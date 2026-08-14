@@ -650,21 +650,46 @@ input { font: inherit; color: inherit; }
   .mobnav button span { font-family: var(--mono); font-size: 8.5px; letter-spacing: .1em; }
   .mobnav button.active { color: var(--accent); }
   .identity { flex-direction: column; align-items: flex-start; }
+  .identity-side { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px 12px; width: 100%; }
   .call-row { grid-template-columns: 30px 1fr auto; grid-template-areas: "i n t" "i d t"; row-gap: 2px; }
+
+  /* Collapse every inline two-column split panel (Overview, Calls, Activity,
+     Device, etc.) to a single column so nothing leaves an empty gutter. */
+  .main .grid[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+
+  /* Charts and the contact graph must never overflow the viewport. */
+  .main svg { max-width: 100%; height: auto; }
+  .net-wrap svg { width: 100%; }
 }
 @media (max-width: 600px) {
   .g-3, .g-4, .g-6 { grid-template-columns: repeat(2, 1fr); }
   .span-2 { grid-column: span 2; }
+  .main { padding: 16px 14px 92px; }
+  .view-head h1 { font-size: 19px; }
+  .stat .n { font-size: 23px; }
   .land-hero h1 { font-size: 44px; }
   .land-cta { flex-direction: column; align-items: stretch; }
   .btn { width: 100%; }
   .btn.sm, .chip, .icon-btn { width: auto; }
   .media-grid { grid-template-columns: repeat(2, 1fr); gap: 9px; }
-  .identity-side { gap: 18px; }
+  .identity-side { grid-template-columns: repeat(2, 1fr); }
+  .identity-main h2 { font-size: 19px; }
   .land-links { gap: 16px; }
   .land-foot { font-size: 10px; }
+  .topbar { padding: 0 12px; gap: 8px; }
+  .topbar .clock { display: none; }
+  .sim-badge, #sim-badge { font-size: 8.5px; padding: 4px 7px; }
   .toasts { left: 14px; right: 14px; bottom: 78px; align-items: stretch; }
   .toast { max-width: none; }
+  .modal-stage { min-height: 240px; padding: 12px; }
+  .cmd { width: 94vw; }
+}
+
+/* Very small phones (≤380px): keep stat tiles readable rather than cramped. */
+@media (max-width: 380px) {
+  .g-4, .g-6 { grid-template-columns: 1fr 1fr; }
+  .land-hero h1 { font-size: 38px; }
+  .mobnav button span { font-size: 8px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
