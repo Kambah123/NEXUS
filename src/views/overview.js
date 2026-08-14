@@ -120,15 +120,7 @@ export function render() {
         <div style="margin-top:12px">${sparkline([30, 44, 38, 52, 47, 61, 55, 68, 62, 74], { w: 240, h: 42, color: '#5b8def' })}</div>
       </div>`, { right: `<button class="chip" data-goto="device">FORENSICS</button>` })}
 
-    ${panel('SESSION INTEGRITY', `
-      <div class="panel-pad" style="display:flex;flex-direction:column;gap:11px">
-        ${[
-          ['Telemetry index', 'LOADED'],
-          ['External requests', 'NONE'],
-          ['Device permissions', 'NONE REQUESTED'],
-          ['Input capture', 'DISABLED'],
-        ].map(([k, v]) => `<div class="kv"><span class="k">${k}</span><span class="v" style="color:#7fd6ae">${v}</span></div>`).join('')}
-      </div>`)}
+    
   </div>
   `;
 }
