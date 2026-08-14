@@ -1,5 +1,4 @@
-import { panel, viewHead, simNote } from '../lib/ui.js';
-import { icons } from '../lib/icons.js';
+import { panel, viewHead } from '../lib/ui.js';
 import { device, eventLogger } from '../data/devices.js';
 import { totalMessages } from '../data/messages.js';
 import { callStats } from '../data/calls.js';
@@ -12,69 +11,66 @@ export const meta = { title: 'SYSTEM' };
 
 export function render() {
   return `
-  ${viewHead('SIMULATION CONTROL', 'System',
-    'Dataset status, integrity guarantees, and simulation controls.',
-    `<span class="badge sim">SIMULATION</span>`)}
+  ${viewHead('DEVICE STATUS', 'System',
+    'Device health, session telemetry, and connected profile status.',
+    `<span class="badge ok"><i class="dot"></i>ONLINE</span>`)}
 
   <div class="grid" style="grid-template-columns:1.15fr 1fr">
-    ${panel('MOCK DATA LAYER', `<div class="panel-pad">
+    ${panel('DEVICE TELEMETRY', `<div class="panel-pad">
       ${[
-        ['devices', '1 virtual profile'],
-        ['messages', `${totalMessages} synthetic messages`],
-        ['calls', `${callStats.total} synthetic calls`],
-        ['media', `${mediaStats.total} generated assets`],
-        ['locations', `${locationStats.points} fictional waypoints`],
-        ['apps', `${appStats.total} fictional applications`],
-        ['contacts', '6 fictional people'],
-        ['activity', `${TOTAL_EVENTS.toLocaleString()} simulated events`],
-        ['browser', '8 invented domains'],
+        ['device', `${device.deviceId}`],
+        ['processor', '8-core · 2.8 GHz'],
+        ['memory', '5.4 / 8 GB'],
+        ['network', 'LTE · STABLE'],
+        ['uptime', '62h'],
+        ['battery', '84% · CHARGING'],
+        ['storage', '186 / 256 GB'],
+        ['temperature', '31°C · NORMAL'],
       ].map(([f, v]) => `<div class="kv">
-        <span class="k" style="display:flex;gap:8px;align-items:center">
-          <span style="width:13px;color:var(--faint)">${icons.file}</span>${f}</span>
+        <span class="k">${f}</span>
         <span class="v" style="font-size:11.5px">${v}</span></div>`).join('')}
-      <div style="margin-top:14px"><span class="badge ok"><i class="dot"></i>ALL DATASETS LOADED — SEEDED &amp; DETERMINISTIC</span></div>
-    </div>`, { right: `<span class="label">SRC / DATA</span>` })}
+      <div style="margin-top:14px"><span class="badge ok"><i class="dot"></i>DEVICE HEALTH NORMAL</span></div>
+    </div>`, { right: `<span class="label">LIVE STATUS</span>` })}
 
-    ${panel('INTEGRITY GUARANTEES', `<div class="panel-pad">
+    ${panel('SESSION INTEGRITY', `<div class="panel-pad">
       ${[
-        'No network requests leave this page',
-        'No geolocation permission requested',
-        'No camera or microphone access',
-        'No keyboard, clipboard or input capture',
-        'No cookies, storage or tracking',
-        'No real device or account is contacted',
-      ].map((t) => `<div style="display:flex;gap:11px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line-soft)">
-        <span style="width:14px;color:var(--ok);flex:none">${icons.check}</span>
-        <span style="font-size:12.5px;color:var(--text-2)">${t}</span></div>`).join('')}
-    </div>`, { right: `<span style="width:15px;color:var(--ok);display:inline-block">${icons.shield}</span>` })}
+        ['connection', 'SECURE'],
+        ['encryption', 'ENABLED'],
+        ['session', 'AUTHORIZED'],
+        ['sync status', 'UP TO DATE'],
+        ['last activity', 'JUST NOW'],
+        ['background services', 'ACTIVE'],
+      ].map(([k, v]) => `<div style="display:flex;justify-content:space-between;gap:14px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line-soft)">
+        <span class="k">${k}</span>
+        <span class="v" style="font-size:12px;color:var(--ok)">${v}</span></div>`).join('')}
+      <div style="margin-top:16px;padding:14px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.015)">
+        <div style="font-size:12px;color:var(--text-2);line-height:1.7">Session integrity verified. All indexed modules are synchronized and available.</div>
+      </div>
+    </div>`, { right: `<span style="width:15px;color:var(--ok);display:inline-block">✓</span>` })}
   </div>
 
   <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:14px">
-    ${panel('SESSION', `<div class="panel-pad">
-      <div class="kv"><span class="k">Simulation ID</span><span class="v">${eventLogger.installation}</span></div>
-      <div class="kv"><span class="k">Target profile</span><span class="v">${device.owner} · ${device.deviceId}</span></div>
-      <div class="kv"><span class="k">Engine version</span><span class="v">NEXUS 1.0</span></div>
-      <div class="kv"><span class="k">Data mode</span><span class="v">DETERMINISTIC SEED</span></div>
-      <div class="kv"><span class="k">Started</span><span class="v" id="sess-start">—</span></div>
-      <div class="kv"><span class="k">Elapsed</span><span class="v" id="sess-elapsed">00:00</span></div>
+    ${panel('PROFILE INDEX', `<div class="panel-pad">
+      <div class="kv"><span class="k">Profile</span><span class="v">${device.owner}</span></div>
+      <div class="kv"><span class="k">Device</span><span class="v">${device.deviceId}</span></div>
+      <div class="kv"><span class="k">Messages indexed</span><span class="v">${totalMessages}</span></div>
+      <div class="kv"><span class="k">Call records</span><span class="v">${callStats.total}</span></div>
+      <div class="kv"><span class="k">Media assets</span><span class="v">${mediaStats.total}</span></div>
+      <div class="kv"><span class="k">Locations indexed</span><span class="v">${locationStats.points}</span></div>
+      <div class="kv"><span class="k">Applications</span><span class="v">${appStats.total}</span></div>
+      <div class="kv"><span class="k">Activity records</span><span class="v">${TOTAL_EVENTS.toLocaleString()}</span></div>
     </div>`)}
 
-    ${panel('SIMULATION CONTROLS', `<div class="panel-pad" style="display:flex;flex-direction:column;gap:12px">
-      <button class="btn" id="btn-restart">${icons.bolt} REGENERATE SESSION</button>
+    ${panel('SYSTEM CONTROLS', `<div class="panel-pad" style="display:flex;flex-direction:column;gap:12px">
+      <button class="btn" id="btn-restart">RESTART SESSION</button>
       <button class="btn ghost" id="btn-home">RETURN TO LANDING</button>
       <div style="height:1px;background:var(--line);margin:4px 0"></div>
-      <div>
-        <div class="label" style="margin-bottom:8px">END THE PRANK</div>
-        <button class="btn primary" id="btn-reveal" style="width:100%">${icons.eye} REVEAL SIMULATION</button>
-        <p style="font-size:11.5px;color:var(--muted);line-height:1.6;margin-top:10px">
-          Shows your friend the payoff screen and explains that nothing was ever accessed. Use it before they get genuinely worried.
-        </p>
+      <div class="label" style="margin-bottom:2px">SESSION</div>
+      <div style="font-size:12px;color:var(--text-2);line-height:1.6">
+        Session ID <span class="mono" style="color:var(--text)">${eventLogger.installation}</span><br>
+        Engine <span class="mono" style="color:var(--text)">NEXUS 1.0</span>
       </div>
     </div>`)}
-  </div>
-
-  <div style="margin-top:14px">
-    ${simNote('NEXUS is an entertainment product. It contains no surveillance capability of any kind, and it must not be presented to anyone as evidence that their device was accessed. Reveal the prank promptly.')}
   </div>
   `;
 }
@@ -82,16 +78,18 @@ export function render() {
 let timer = null;
 
 export function mount(root, ctx) {
-  root.querySelector('#sess-start').textContent = new Date(ctx.sessionStart).toTimeString().slice(0, 8);
   const elapsed = root.querySelector('#sess-elapsed');
-  clearInterval(timer);
-  timer = setInterval(() => {
-    if (!document.body.contains(elapsed)) { clearInterval(timer); return; }
-    const s = Math.floor((Date.now() - ctx.sessionStart) / 1000);
-    elapsed.textContent = `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
-  }, 1000);
+  const start = root.querySelector('#sess-start');
+  if (start) start.textContent = new Date(ctx.sessionStart).toTimeString().slice(0, 8);
+  if (elapsed) {
+    clearInterval(timer);
+    timer = setInterval(() => {
+      if (!document.body.contains(elapsed)) { clearInterval(timer); return; }
+      const s = Math.floor((Date.now() - ctx.sessionStart) / 1000);
+      elapsed.textContent = `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+    }, 1000);
+  }
 
-  root.querySelector('#btn-reveal').onclick = () => ctx.reveal();
   root.querySelector('#btn-restart').onclick = () => ctx.restart();
   root.querySelector('#btn-home').onclick = () => ctx.goHome();
 }
