@@ -15,8 +15,37 @@
 <div class="grain" aria-hidden="true"></div>
 <div class="vignette" aria-hidden="true"></div>
 
+<!-- ============================ LOGIN ============================ -->
+<div id="login">
+  <div class="glow" aria-hidden="true"></div>
+  <div class="login-box">
+    <div id="login-logo"></div>
+    <div class="login-head">
+      <span class="badge sim"><i class="dot red live"></i> SIMULATION — AUTHORIZED ACCESS</span>
+      <h1>SECURE SIGN-IN</h1>
+      <p>Enter your NEXUS credentials to open the intelligence console.</p>
+    </div>
+    <form id="login-form" autocomplete="off" novalidate>
+      <label class="login-field">
+        <span class="label">OPERATOR ID</span>
+        <input type="email" id="login-email" placeholder="name@email.com" autocomplete="off" spellcheck="false">
+      </label>
+      <label class="login-field">
+        <span class="label">ACCESS KEY</span>
+        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="new-password">
+      </label>
+      <div class="login-error" id="login-error">Invalid credentials. Access denied.</div>
+      <button type="submit" class="btn primary" id="login-submit" style="width:100%">AUTHENTICATE →</button>
+    </form>
+    <div class="login-foot">
+      <span class="label">NEXUS 1.0</span>
+      <span class="label">ENCRYPTED SIMULATION SESSION</span>
+    </div>
+  </div>
+</div>
+
 <!-- ============================ LANDING ============================ -->
-<div id="landing">
+<div id="landing" style="display:none">
   <div class="glow" aria-hidden="true"></div>
 
   <nav class="land-nav">

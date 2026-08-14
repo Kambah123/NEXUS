@@ -64,6 +64,52 @@ const ctx = {
   navigate,
 };
 
+/* ------------------------------ login ----------------------------
+   A local access gate. The credentials are compared in-browser against
+   fixed values; nothing the visitor types is stored or transmitted.
+   Because this is a static page, the values are visible in source — it
+   gates casual entry, it is not real authentication.
+   ------------------------------------------------------------------ */
+
+const AUTH = { email: 'wolny746@gmail.com', pass: 'Nexus@123' };
+let authed = false;
+let pendingDeepLink = false;
+
+$('#login-logo').innerHTML = logo('DEVICE INTELLIGENCE', 30);
+
+function grantAccess() {
+  authed = true;
+  const login = $('#login');
+  login.style.transition = 'opacity .4s ease';
+  login.style.opacity = '0';
+  setTimeout(() => {
+    login.style.display = 'none';
+    if (pendingDeepLink) {
+      $('#landing').style.display = 'none';
+      enterApp();
+    } else {
+      $('#landing').style.display = '';
+    }
+  }, 380);
+}
+
+$('#login-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const email = $('#login-email').value.trim().toLowerCase();
+  const pass = $('#login-pass').value;
+  const err = $('#login-error');
+  if (email === AUTH.email.toLowerCase() && pass === AUTH.pass) {
+    err.classList.remove('show');
+    grantAccess();
+  } else {
+    err.classList.add('show');
+    const box = $('#login');
+    box.classList.remove('shake');
+    void box.offsetWidth;
+    box.classList.add('shake');
+  }
+});
+
 /* ---------------------------- landing --------------------------- */
 
 $('#land-logo').innerHTML = logo('DEVICE INTELLIGENCE', 28);
@@ -492,8 +538,9 @@ function goHome() {
 
 /* ------------------------------ boot ------------------------------ */
 
-// Deep link support: /#/messages opens the dashboard straight away.
+// Deep link support: /#/messages opens the dashboard — but only after the
+// login gate. An unauthenticated deep link still lands on the sign-in screen,
+// and a successful login then continues to the requested route.
 if (location.hash.startsWith('#/')) {
-  $('#landing').style.display = 'none';
-  enterApp();
+  pendingDeepLink = true;
 }
