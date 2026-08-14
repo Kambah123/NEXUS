@@ -94,8 +94,10 @@ function grantAccess() {
 
 $('#login-form').addEventListener('submit', (e) => {
   e.preventDefault();
+  // Normalise both fields: mobile keyboards can inject leading/trailing spaces
+  // or smart-quotes, which would otherwise fail an exact match.
   const email = $('#login-email').value.trim().toLowerCase();
-  const pass = $('#login-pass').value;
+  const pass = $('#login-pass').value.trim();
   const err = $('#login-error');
   if (email === AUTH.email.toLowerCase() && pass === AUTH.pass) {
     err.classList.remove('show');
