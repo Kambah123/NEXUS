@@ -4,6 +4,7 @@ import { sparkline } from '../lib/charts.js';
 import { ago, hhmm } from '../lib/format.js';
 import { contacts, byId } from '../data/contacts.js';
 import { device } from '../data/devices.js';
+import { ownerAvatar } from '../data/avatar.js';
 import { conversations } from '../data/messages.js';
 import { calls } from '../data/calls.js';
 
@@ -49,11 +50,13 @@ function graph() {
     <circle cx="${CX}" cy="${CY}" r="${RADIUS.outer}" fill="none" stroke="rgba(255,255,255,.028)" stroke-dasharray="2 8"/>
     ${links}${cross}
     <circle cx="${CX}" cy="${CY}" r="90" fill="url(#corec)"/>
+    <defs><clipPath id="coreClip"><circle cx="${CX}" cy="${CY}" r="40"/></clipPath></defs>
     <g>
-      <circle cx="${CX}" cy="${CY}" r="42" fill="#141416" stroke="rgba(216,50,63,.55)" stroke-width="1.4"/>
+      <image href="${ownerAvatar}" x="${CX - 40}" y="${CY - 40}" width="80" height="80" clip-path="url(#coreClip)" preserveAspectRatio="xMidYMid slice"/>
+      <circle cx="${CX}" cy="${CY}" r="42" fill="none" stroke="rgba(216,50,63,.7)" stroke-width="1.6"/>
       <circle class="marker-pulse" cx="${CX}" cy="${CY}" r="42" fill="none" stroke="rgba(216,50,63,.45)" stroke-width="1"/>
-      <text x="${CX}" y="${CY + 1}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="15" font-weight="620" fill="#fff">${device.owner}</text>
-      <text x="${CX}" y="${CY + 16}" text-anchor="middle" font-family="ui-monospace,monospace" font-size="8" fill="#a9a9ad" letter-spacing="1.6">VIRTUAL DEVICE</text>
+      <text x="${CX}" y="${CY + 62}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="14" font-weight="620" fill="#fff">${device.owner}</text>
+      <text x="${CX}" y="${CY + 76}" text-anchor="middle" font-family="ui-monospace,monospace" font-size="8" fill="#a9a9ad" letter-spacing="1.6">VIRTUAL DEVICE</text>
     </g>
     ${nodes}
   </svg>`;

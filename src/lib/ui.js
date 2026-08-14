@@ -4,6 +4,7 @@ import { icons } from './icons.js';
 import { sparkline } from './charts.js';
 import { initials } from './format.js';
 import { device } from '../data/devices.js';
+import { ownerAvatar } from '../data/avatar.js';
 
 export function panel(title, body, { right = '', pad = false, cls = '' } = {}) {
   return `<section class="panel ${cls}">
@@ -30,7 +31,7 @@ export function avatar(name, { size = '', hue = null } = {}) {
 
 export function identityCard() {
   return `<div class="identity">
-    <div class="avatar"><span>${initials(device.owner)}</span><div class="ring"></div></div>
+    <div class="avatar photo"><img src="${ownerAvatar}" alt="${device.owner} — synthetic target avatar" loading="lazy"><div class="ring"></div></div>
     <div class="identity-main">
       <div class="label">${device.kind} // ${device.platform}</div>
       <h2>${device.owner}</h2>
